@@ -195,8 +195,8 @@ const cambiarPagina = (nuevaPagina) => {
             <q-btn
               v-if="celda.row.activo !== false"
               flat dense round size="sm"
-              icon="toggle_off"
-              color="warning"
+              icon="toggle_on"
+              color="positive"
               class="action-secondary"
               @click="desactivar(celda.row)"
             >
@@ -205,8 +205,8 @@ const cambiarPagina = (nuevaPagina) => {
             <q-btn
               v-else
               flat dense round size="sm"
-              icon="toggle_on"
-              color="positive"
+              icon="toggle_off"
+              color="negative"
               class="action-secondary"
               @click="activar(celda.row)"
             >
