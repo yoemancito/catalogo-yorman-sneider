@@ -16,7 +16,10 @@ app.use(express.json());
 
 app.use((req, res, next) => {
   const origen = req.headers.origin;
-  if (origen && origenesPermitidos.includes(origen)) {
+  const permitido =
+    (origen && origenesPermitidos.includes(origen)) ||
+    (origen && origen.endsWith('.vercel.app'));
+  if (origen && permitido) {
     res.header('Access-Control-Allow-Origin', origen);
   }
   res.header('Access-Control-Allow-Headers', 'Authorization, Content-Type, x-token');
