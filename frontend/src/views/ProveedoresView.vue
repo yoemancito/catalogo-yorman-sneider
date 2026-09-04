@@ -4,7 +4,7 @@ import { computed, onMounted, ref } from "vue";
 import EncabezadoPagina from "@/components/Encabezados/EncabezadoPagina.vue";
 import TablaDatos from "@/components/Tables/TablaDatos.vue";
 
-import { get, post, put, del } from "@/services/api.service";
+import { get, post, put } from "@/services/api.service";
 import { useGeneralStore } from "@/store/General";
 import { useNotificar } from "@/composables/useNotificar";
 import { useConfirmar } from "@/composables/useConfirmar";
@@ -97,23 +97,6 @@ const guardar = async () => {
   }
 };
 
-const eliminar = async (proveedor) => {
-  const aceptado = await confirmar({
-    titulo: "Eliminar proveedor",
-    mensaje: `¿Eliminar ${proveedor.nombre}?`,
-    textoOk: "Eliminar",
-    color: "negative",
-  });
-  if (!aceptado) return;
-  try {
-    await del(`/proveedores/${proveedor._id}`);
-    notificarOk("Proveedor eliminado");
-    await cargar();
-  } catch (e) {
-    notificarError(e);
-  }
-};
-
 const toggleActivo = async (proveedor) => {
   try {
     await put(`/proveedores/${proveedor._id}`, { activo: !proveedor.activo });
@@ -158,9 +141,6 @@ const toggleActivo = async (proveedor) => {
             </q-btn>
             <q-btn flat dense round size="sm" :icon="celda.row.activo ? 'toggle_on' : 'toggle_off'" :color="celda.row.activo ? 'negative' : 'positive'" class="action-secondary" @click="toggleActivo(celda.row)">
               <q-tooltip>{{ celda.row.activo ? "Desactivar" : "Activar" }}</q-tooltip>
-            </q-btn>
-            <q-btn flat dense round size="sm" icon="delete" color="negative" class="action-secondary" @click="eliminar(celda.row)">
-              <q-tooltip>Eliminar</q-tooltip>
             </q-btn>
           </q-td>
         </template>

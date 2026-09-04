@@ -24,6 +24,10 @@ async function loguear({ email, password }) {
     throw new AppError(401, 'Credenciales inválidas', 'CREDENCIALES_INVALIDAS');
   }
 
+  if (usuario.activo === false) {
+    throw new AppError(403, 'Usuario desactivado. Contacta al administrador.', 'USUARIO_DESACTIVADO');
+  }
+
   const passwordValida = await bcrypt.compare(password, usuario.password);
   if (!passwordValida) {
     throw new AppError(401, 'Credenciales inválidas', 'CREDENCIALES_INVALIDAS');

@@ -4,7 +4,7 @@ import { computed, onMounted, ref } from "vue";
 import EncabezadoPagina from "@/components/Encabezados/EncabezadoPagina.vue";
 import TablaDatos from "@/components/Tables/TablaDatos.vue";
 
-import { get, put, del } from "@/services/api.service";
+import { get, put } from "@/services/api.service";
 import { useGeneralStore } from "@/store/General";
 import { useNotificar } from "@/composables/useNotificar";
 import { useConfirmar } from "@/composables/useConfirmar";
@@ -17,6 +17,7 @@ const { confirmar } = useConfirmar();
 const columnas = [
   { name: "email", label: "Email", field: "email", align: "left", sortable: true },
   { name: "rol", label: "Rol", field: "rol", align: "center", sortable: true },
+  { name: "activo", label: "Estado", field: "activo", align: "center", sortable: true },
   { name: "createdAt", label: "Creado", field: "createdAt", align: "left", sortable: true, format: (v) => new Date(v).toLocaleDateString() },
   { name: "acciones", label: "Acciones", field: "acciones", align: "right" },
 ];
@@ -82,17 +83,27 @@ const guardar = async () => {
   }
 };
 
-const eliminar = async (usuario) => {
+const desactivar = async (usuario) => {
   const aceptado = await confirmar({
-    titulo: "Eliminar usuario",
-    mensaje: `¿Eliminar ${usuario.email}?`,
-    textoOk: "Eliminar",
-    color: "negative",
+    titulo: "Desactivar usuario",
+    mensaje: `¿Desactivar ${usuario.email}? No podra iniciar sesion.`,
+    textoOk: "Desactivar",
+    color: "warning",
   });
   if (!aceptado) return;
   try {
-    await del(`/usuarios/${usuario._id}`);
-    notificarOk("Usuario eliminado");
+    await put(`/usuarios/${usuario._id}`, { activo: false });
+    notificarOk("Usuario desactivado");
+    await cargar();
+  } catch (e) {
+    notificarError(e);
+  }
+};
+
+const activar = async (usuario) => {
+  try {
+    await put(`/usuarios/${usuario._id}`, { activo: true });
+    notificarOk("Usuario activado");
     await cargar();
   } catch (e) {
     notificarError(e);
@@ -156,13 +167,36 @@ const cambiarPagina = (nuevaPagina) => {
           </q-td>
         </template>
 
+        <template #body-cell-activo="celda">
+          <q-td :props="celda" class="text-center">
+            <q-badge :color="celda.row.activo ? 'positive' : 'grey-6'" :label="celda.row.activo ? 'Activo' : 'Desactivado'" />
+          </q-td>
+        </template>
+
         <template #body-cell-acciones="celda">
           <q-td :props="celda" class="text-right">
             <q-btn flat dense round size="sm" icon="edit" color="primary" class="action-secondary" @click="abrirEdicion(celda.row)">
               <q-tooltip>Editar</q-tooltip>
             </q-btn>
-            <q-btn flat dense round size="sm" icon="delete" color="negative" class="action-secondary" @click="eliminar(celda.row)">
-              <q-tooltip>Eliminar</q-tooltip>
+            <q-btn
+              v-if="celda.row.activo !== false"
+              flat dense round size="sm"
+              icon="toggle_off"
+              color="warning"
+              class="action-secondary"
+              @click="desactivar(celda.row)"
+            >
+              <q-tooltip>Desactivar</q-tooltip>
+            </q-btn>
+            <q-btn
+              v-else
+              flat dense round size="sm"
+              icon="toggle_on"
+              color="positive"
+              class="action-secondary"
+              @click="activar(celda.row)"
+            >
+              <q-tooltip>Activar</q-tooltip>
             </q-btn>
           </q-td>
         </template>

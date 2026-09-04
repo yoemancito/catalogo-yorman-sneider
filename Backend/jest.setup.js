@@ -1,5 +1,5 @@
 process.env.PORT = '3001';
-process.env.MONGO_URI = 'mongodb://localhost:27018/catalogobulk_test';
+process.env.MONGO_URI = 'mongodb://localhost:27019/catalogobulk_test';
 process.env.REDIS_HOST = 'localhost';
 process.env.REDIS_PORT = '6380';
 process.env.JWT_SECRET = 'secreto_test';

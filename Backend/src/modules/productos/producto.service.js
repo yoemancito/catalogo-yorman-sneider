@@ -32,6 +32,9 @@ function normalizarProducto(datos) {
   if (datos.proveedorId !== undefined) {
     limpio.proveedorId = datos.proveedorId;
   }
+  if (datos.activo !== undefined) {
+    limpio.activo = Boolean(datos.activo);
+  }
 
   return limpio;
 }
@@ -99,11 +102,12 @@ async function actualizarProducto(id, datos) {
   return productoRepository.actualizar(id, limpio);
 }
 
-async function eliminarProducto(id) {
-  const eliminado = await productoRepository.eliminar(id);
-  if (!eliminado) {
+async function desactivarProducto(id) {
+  const desactivado = await productoRepository.desactivar(id);
+  if (!desactivado) {
     throw new AppError(404, 'Producto no encontrado', 'PRODUCTO_NO_ENCONTRADO');
   }
+  return desactivado;
 }
 
 module.exports = {
@@ -111,5 +115,5 @@ module.exports = {
   crearProducto,
   buscarProducto,
   actualizarProducto,
-  eliminarProducto,
+  desactivarProducto,
 };

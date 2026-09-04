@@ -74,7 +74,7 @@ router.post('/', auth, rol('admin'), proveedorController.crear);
  *       404: { description: Proveedor no encontrado }
  *   delete:
  *     tags: [Proveedores]
- *     summary: Eliminar proveedor (solo admin) - 409 si tiene productos
+ *     summary: Desactivar proveedor (solo admin) - no se elimina
  *     parameters:
  *       - { in: path, name: id, required: true, schema: { type: string } }
  *     responses:
@@ -85,6 +85,6 @@ router.post('/', auth, rol('admin'), proveedorController.crear);
  */
 router.get('/:id', auth, proveedorController.obtener);
 router.put('/:id', auth, rol('admin'), proveedorController.actualizar);
-router.delete('/:id', auth, rol('admin'), proveedorController.eliminar);
+router.delete('/:id', auth, rol('admin'), proveedorController.desactivar);
 
 module.exports = router;

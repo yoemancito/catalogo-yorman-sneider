@@ -22,14 +22,17 @@ async function crear(datos) {
 
 async function actualizar(id, datos) {
   const aActualizar = { ...datos };
-  if (aActualizar.stock !== undefined) {
-    aActualizar.disponible = aActualizar.stock > 0;
+  if (aActualizar.stock !== undefined || aActualizar.activo !== undefined) {
+    const actual = await Producto.findById(id);
+    const activo = aActualizar.activo !== undefined ? aActualizar.activo : actual?.activo;
+    const stock = aActualizar.stock !== undefined ? aActualizar.stock : actual?.stock;
+    aActualizar.disponible = activo !== false && Number(stock) > 0;
   }
   return Producto.findByIdAndUpdate(id, aActualizar, { returnDocument: 'after', runValidators: true });
 }
 
-async function eliminar(id) {
-  return Producto.findByIdAndDelete(id);
+async function desactivar(id) {
+  return Producto.findByIdAndUpdate(id, { activo: false, disponible: false }, { returnDocument: 'after', runValidators: true });
 }
 
 async function contarPorProveedor(proveedorId) {
@@ -42,6 +45,6 @@ module.exports = {
   buscarPorSku,
   crear,
   actualizar,
-  eliminar,
+  desactivar,
   contarPorProveedor,
 };

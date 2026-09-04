@@ -37,13 +37,13 @@ async function actualizar(req, res, next) {
   }
 }
 
-async function eliminar(req, res, next) {
+async function desactivar(req, res, next) {
   try {
-    await proveedorService.eliminarProveedor(req.params.id);
-    return res.status(204).send();
+    const proveedor = await proveedorService.desactivarProveedor(req.params.id);
+    return res.status(200).json(proveedor);
   } catch (err) {
     return next(err);
   }
 }
 
-module.exports = { listar, obtener, crear, actualizar, eliminar };
+module.exports = { listar, obtener, crear, actualizar, desactivar };

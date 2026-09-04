@@ -36,6 +36,7 @@ async function actualizar(id, datos) {
   const aActualizar = {};
   if (datos.email !== undefined) aActualizar.email = String(datos.email).trim().toLowerCase();
   if (datos.rol !== undefined) aActualizar.rol = datos.rol;
+  if (datos.activo !== undefined) aActualizar.activo = Boolean(datos.activo);
   if (datos.password !== undefined) {
     if (String(datos.password).length < 6) {
       throw new AppError(400, 'La contraseña debe tener al menos 6 caracteres', 'PASSWORD_CORTO');
@@ -46,11 +47,12 @@ async function actualizar(id, datos) {
   return Usuario.findByIdAndUpdate(id, aActualizar, { returnDocument: 'after', runValidators: true });
 }
 
-async function eliminar(id) {
-  const eliminado = await Usuario.findByIdAndDelete(id);
-  if (!eliminado) {
+async function desactivar(id) {
+  const desactivado = await Usuario.findByIdAndUpdate(id, { activo: false }, { returnDocument: 'after', runValidators: true });
+  if (!desactivado) {
     throw new AppError(404, 'Usuario no encontrado', 'USUARIO_NO_ENCONTRADO');
   }
+  return desactivado;
 }
 
-module.exports = { listar, buscarPorId, actualizar, eliminar };
+module.exports = { listar, buscarPorId, actualizar, desactivar };

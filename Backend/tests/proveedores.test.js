@@ -44,17 +44,18 @@ describe('Proveedores', () => {
     expect(res.status).toBe(403);
   });
 
-  it('eliminar proveedor sin productos: 204', async () => {
+  it('desactivar proveedor via DELETE: 200 y activo false', async () => {
     const token = await tokenDe('admin');
     const creado = await request(app).post('/api/proveedores').set('Authorization', `Bearer ${token}`).send({ nombre: 'Solo' });
     const res = await request(app)
       .delete(`/api/proveedores/${creado.body._id}`)
       .set('Authorization', `Bearer ${token}`);
 
-    expect(res.status).toBe(204);
+    expect(res.status).toBe(200);
+    expect(res.body.activo).toBe(false);
   });
 
-  it('eliminar proveedor con productos: 409 (integridad)', async () => {
+  it('desactivar proveedor con productos no bloquea (activo false)', async () => {
     const tokenAdmin = await tokenDe('admin');
     const proveedor = await request(app)
       .post('/api/proveedores')
@@ -70,8 +71,8 @@ describe('Proveedores', () => {
       .delete(`/api/proveedores/${proveedor.body._id}`)
       .set('Authorization', `Bearer ${tokenAdmin}`);
 
-    expect(res.status).toBe(409);
-    expect(res.body.codigo).toBe('PROVEEDOR_CON_PRODUCTOS');
+    expect(res.status).toBe(200);
+    expect(res.body.activo).toBe(false);
   });
 
   it('desactivar proveedor con PUT activo:false: 200', async () => {

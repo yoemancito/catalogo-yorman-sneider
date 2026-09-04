@@ -24,8 +24,8 @@ async function actualizar(id, datos) {
   return Proveedor.findByIdAndUpdate(id, datos, { returnDocument: 'after', runValidators: true });
 }
 
-async function eliminar(id) {
-  return Proveedor.findByIdAndDelete(id);
+async function desactivar(id) {
+  return Proveedor.findByIdAndUpdate(id, { activo: false }, { returnDocument: 'after', runValidators: true });
 }
 
-module.exports = { listar, buscarPorId, buscarPorSlug, crear, actualizar, eliminar };
+module.exports = { listar, buscarPorId, buscarPorSlug, crear, actualizar, desactivar };

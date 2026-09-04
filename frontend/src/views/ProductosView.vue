@@ -4,7 +4,7 @@ import { computed, onMounted, ref } from "vue";
 import EncabezadoPagina from "@/components/Encabezados/EncabezadoPagina.vue";
 import TablaDatos from "@/components/Tables/TablaDatos.vue";
 
-import { get, post, put, del } from "@/services/api.service";
+import { get, post, put } from "@/services/api.service";
 import { useGeneralStore } from "@/store/General";
 import { useNotificar } from "@/composables/useNotificar";
 import { useConfirmar } from "@/composables/useConfirmar";
@@ -112,17 +112,27 @@ const guardar = async () => {
   }
 };
 
-const eliminar = async (producto) => {
+const desactivar = async (producto) => {
   const aceptado = await confirmar({
-    titulo: "Eliminar producto",
-    mensaje: `¿Eliminar el producto ${producto.sku}?`,
-    textoOk: "Eliminar",
-    color: "negative",
+    titulo: "Desactivar producto",
+    mensaje: `¿Desactivar el producto ${producto.sku}? Dejara de aparecer en el catalogo publico.`,
+    textoOk: "Desactivar",
+    color: "warning",
   });
   if (!aceptado) return;
   try {
-    await del(`/productos/${producto._id}`);
-    notificarOk("Producto eliminado");
+    await put(`/productos/${producto._id}`, { activo: false });
+    notificarOk("Producto desactivado");
+    await cargar();
+  } catch (e) {
+    notificarError(e);
+  }
+};
+
+const activar = async (producto) => {
+  try {
+    await put(`/productos/${producto._id}`, { activo: true });
+    notificarOk("Producto activado");
     await cargar();
   } catch (e) {
     notificarError(e);
@@ -171,7 +181,9 @@ const cambiarPagina = (nuevaPagina) => {
       <TablaDatos :filas="productos" :columnas="columnas" :cargando="cargando" mensaje-vacio="Aun no hay productos">
         <template #body-cell-disponible="celda">
           <q-td :props="celda" class="text-center">
-            <q-badge :color="celda.row.disponible ? 'positive' : 'grey-6'" :label="celda.row.disponible ? 'Activo' : 'Sin stock'" />
+            <q-badge v-if="celda.row.activo === false" color="grey-6" label="Desactivado" />
+            <q-badge v-else-if="celda.row.disponible" color="positive" label="Activo" />
+            <q-badge v-else color="amber-8" label="Sin stock" />
           </q-td>
         </template>
 
@@ -180,8 +192,25 @@ const cambiarPagina = (nuevaPagina) => {
             <q-btn flat dense round size="sm" icon="edit" color="primary" class="action-secondary" @click="abrirEdicion(celda.row)">
               <q-tooltip>Editar</q-tooltip>
             </q-btn>
-            <q-btn flat dense round size="sm" icon="delete" color="negative" class="action-secondary" @click="eliminar(celda.row)">
-              <q-tooltip>Eliminar</q-tooltip>
+            <q-btn
+              v-if="celda.row.activo !== false"
+              flat dense round size="sm"
+              icon="toggle_off"
+              color="warning"
+              class="action-secondary"
+              @click="desactivar(celda.row)"
+            >
+              <q-tooltip>Desactivar</q-tooltip>
+            </q-btn>
+            <q-btn
+              v-else
+              flat dense round size="sm"
+              icon="toggle_on"
+              color="positive"
+              class="action-secondary"
+              @click="activar(celda.row)"
+            >
+              <q-tooltip>Activar</q-tooltip>
             </q-btn>
           </q-td>
         </template>

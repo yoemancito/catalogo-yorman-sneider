@@ -87,7 +87,7 @@ router.post('/', auth, rol('admin'), productoController.crear);
  *       409: { description: Sku duplicado }
  *   delete:
  *     tags: [Productos]
- *     summary: Eliminar producto (solo admin)
+ *     summary: Desactivar producto (solo admin)
  *     parameters:
  *       - { in: path, name: id, required: true, schema: { type: string } }
  *     responses:
@@ -97,6 +97,6 @@ router.post('/', auth, rol('admin'), productoController.crear);
  */
 router.get('/:id', auth, productoController.obtener);
 router.put('/:id', auth, rol('admin'), productoController.actualizar);
-router.delete('/:id', auth, rol('admin'), productoController.eliminar);
+router.delete('/:id', auth, rol('admin'), productoController.desactivar);
 
 module.exports = router;

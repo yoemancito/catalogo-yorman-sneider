@@ -1,8 +1,9 @@
 const jwt = require('jsonwebtoken');
 const AppError = require('../errors/AppError');
 const env = require('../config/env');
+const Usuario = require('../modules/auth/usuario.model');
 
-function auth(req, res, next) {
+async function auth(req, res, next) {
   const header = req.headers.authorization || '';
   const [tipo, bearerToken] = header.split(' ');
 
@@ -15,9 +16,18 @@ function auth(req, res, next) {
   try {
     const payload = jwt.verify(token, env.JWT_SECRET);
     req.usuario = { id: payload.sub || payload.uid, rol: payload.rol };
-    return next();
   } catch (err) {
     return next(new AppError(401, 'Token inválido o expirado', 'TOKEN_INVALIDO'));
+  }
+
+  try {
+    const usuario = await Usuario.findById(req.usuario.id).select('activo').lean();
+    if (!usuario || usuario.activo === false) {
+      return next(new AppError(403, 'Usuario desactivado', 'USUARIO_DESACTIVADO'));
+    }
+    return next();
+  } catch (err) {
+    return next(err);
   }
 }
 

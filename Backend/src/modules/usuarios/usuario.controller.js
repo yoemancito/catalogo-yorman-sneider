@@ -28,13 +28,13 @@ async function actualizar(req, res, next) {
   }
 }
 
-async function eliminar(req, res, next) {
+async function desactivar(req, res, next) {
   try {
-    await usuarioService.eliminar(req.params.id);
-    return res.status(204).send();
+    const usuario = await usuarioService.desactivar(req.params.id);
+    return res.status(200).json(usuario);
   } catch (err) {
     return next(err);
   }
 }
 
-module.exports = { listar, obtener, actualizar, eliminar };
+module.exports = { listar, obtener, actualizar, desactivar };

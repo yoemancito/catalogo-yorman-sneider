@@ -58,12 +58,16 @@ const productoSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    activo: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true }
 );
 
 productoSchema.pre('save', async function calcularDisponible() {
-  this.disponible = this.stock > 0;
+  this.disponible = this.activo !== false && this.stock > 0;
 });
 
 productoSchema.set('toJSON', {
