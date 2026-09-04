@@ -36,6 +36,19 @@ app.get('/health', async (req, res) => {
   return res.status(503).json({ status: 'error', mongo, redis });
 });
 
+app.get(['/', '/api'], (_req, res) => {
+  return res.status(200).json({
+    nombre: 'API Catalogo Yorman & Sneider',
+    estado: 'ok',
+    endpoints: {
+      docs: '/api/docs',
+      catalogo_publico: '/api/catalogo',
+      catalogo_admin: '/api/productos',
+      auth: '/api/auth',
+    },
+  });
+});
+
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 const authRoutes = require('./modules/auth/auth.routes');
