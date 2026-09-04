@@ -1,0 +1,47 @@
+// =============================================================================
+// /styles/variables.scss
+// Variables SCSS globales. Este archivo lo lee Quasar (ver vite.config.js ->
+// quasar({ sassVariables: "src/styles/variables.scss" })) ANTES de compilar sus
+// propios estilos, por eso cambiar $primary aqui repinta toda la aplicacion:
+// botones, toolbars, tabs, inputs... todo lo que use color="primary".
+//
+// REGLA: aqui solo van valores, nunca selectores CSS.
+//
+// La paleta es la de Yorman & Sneider. En el proyecto original la marca era azul
+// (blue-8); aqui se mueve a violeta (purple-8) para darle una identidad propia
+// sin cambiar ni un componente: como se define $primary, color="primary" ya
+// pinta violeta en todos lados.
+// =============================================================================
+
+// --- Colores de marca de Quasar (los nombres son fijos, no inventar otros) ---
+$primary: #6A1B9A; // violeta / purpura (purple-8)
+$secondary: #4527A0; // indigo oscuro
+$accent: #D81B60; // magenta / pink
+
+$dark: #1d1d1d;
+$dark-page: #14161a;
+
+$positive: #21ba45;
+$negative: #c10015;
+$info: #31ccec;
+$warning: #f2c037;
+
+// --- Paleta de apoyo (tonos de violeta) -------------------------------------
+$verde-card: #7B1FA2; // cabecera de cards (purple-7)
+$verde-oscuro: #4A148C; // acciones secundarias (purple-9)
+$verde-hover: #AB47BC; // hover y bordes activos (purple-4)
+$verde-suave: #F3E5F5; // fondo suave de hover (purple-50)
+$verde-borde: #E1BEE7; // bordes de tabla (purple-100)
+
+// --- Neutros ----------------------------------------------------------------
+$texto-principal: #212121;
+$texto-fuerte: #424242;
+$texto-secundario: #616161;
+$color-texto-suave: #616161;
+$color-borde: #e0e0e0;
+$color-fondo-app: #fafafa;
+
+// --- Medidas ----------------------------------------------------------------
+$radio-tarjeta: 8px;
+$radio-dialogo: 12px;
+$ancho-maximo-contenido: 1180px;

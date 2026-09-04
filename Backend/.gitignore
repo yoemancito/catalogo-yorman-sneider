@@ -1,0 +1,19 @@
+# Dependencias
+node_modules/
+
+# Variables de entorno
+.env
+
+# Archivos de logs
+*.log
+npm-debug.log*
+
+# Subidas / uploads locales
+uploads/
+
+# Cobertura de pruebas
+coverage/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db

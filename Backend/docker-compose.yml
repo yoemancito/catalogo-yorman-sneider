@@ -1,0 +1,28 @@
+services:
+  api-ys:
+    build: .
+    container_name: catalogobulk_ys_api
+    ports:
+      - "3002:3000"
+    env_file:
+      - .env
+    depends_on:
+      - mongo-ys
+      - redis-ys
+
+  mongo-ys:
+    image: mongo:7
+    container_name: catalogobulk_ys_mongo
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27019:27017"
+
+  redis-ys:
+    image: redis:7-alpine
+    container_name: catalogobulk_ys_redis
+    ports:
+      - "6381:6379"
+
+volumes:
+  mongo_data:
