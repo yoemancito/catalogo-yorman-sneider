@@ -108,7 +108,7 @@ const iniciarSesion = async () => {
       </form>
 
       <div class="ys-login__nota">
-        Usuario de prueba: <strong>admin@sena.edu.co</strong> / <strong>123456</strong>
+        Usuario de prueba: <strong>admin@catalogoys.com</strong> / <strong>123456</strong>
       </div>
     </div>
   </div>
